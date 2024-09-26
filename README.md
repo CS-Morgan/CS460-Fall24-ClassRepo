@@ -13,12 +13,12 @@ Use this to start all your homeworks.
 
 Creates (or uses) a folder named Sample, with subfolders Sample and Sample_Tests.  Places a solution named "Sample"  in the outer folder, a MVC project named Sample in the Sample/Sample folder and a NUnit project in the Sample/Sample_Tests folder.  Adds a reference from the testing project to the main project so it can be used to test code in the main project.
 ```
-dotnet new mvc --output Sample/Sample --framework net7.0 --auth None --use-program-main true
-dotnet new sln -o Sample
-dotnet sln Sample add Sample/Sample
-dotnet new nunit --output Sample/Sample_Tests --framework net7.0
-dotnet sln Sample add Sample/Sample_Tests
-dotnet add Sample/Sample_Tests reference Sample/Sample
+dotnet new mvc --output Sample1/Sample2 --framework net8.0 --auth None --use-program-main true
+dotnet new sln -o Sample1
+dotnet sln Sample1 add Sample1/Sample2
+dotnet new nunit --output Sample1/Sample_Tests --framework net8.0
+dotnet sln Sample1 add Sample1/Sample_Tests
+dotnet add Sample1/Sample_Tests reference Sample1/Sample2
 ```
 
 ## Add required packages
@@ -27,7 +27,7 @@ dotnet add Sample/Sample_Tests reference Sample/Sample
 Either manually add version information (--version) or double check that you got the ones you wanted
 
 ```
-#cd into the project you want to add to, i.e. Sample/Sample (so you're right next to the .csproj file)
+#cd into the project you want to add to, i.e. Sample1/Sample2 (so you're right next to the .csproj file)
 dotnet list package
 dotnet add package Microsoft.EntityFrameworkCore
 dotnet add package Microsoft.EntityFrameworkCore.Design
