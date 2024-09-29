@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\TGen2.props" />
+</Project>
