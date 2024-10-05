@@ -1,0 +1,33 @@
+Table Buyer {
+  ID int [pk, increment]
+  FirstName nvarchar(50) [not null]
+  LastName nvarchar(50) [not null]
+  Email nvarchar(50) [not null]
+}
+
+Table Seller {
+  ID int [pk, increment]
+  FirstName nvarchar(50) [not null]
+  LastName nvarchar(50) [not null]
+  Email nvarchar(50) [not null]
+  Phone nvarchar(15)
+}
+
+Table Item {
+  ID int [pk, increment]
+  Name nvarchar(50) [not null]
+  Description nvarchar(256) [not null]
+  SellerID int [ref: > Seller.ID]
+}
+
+Table Bid {
+  ID int [pk, increment]
+  Price decimal(17,2)
+  TimeSubmitted datetime
+  BuyerID int [ref: > Buyer.ID]
+  ItemID int [ref: > Item.ID]
+}
+
+//Ref {
+//  Item.SellerID > Seller.ID
+//}
