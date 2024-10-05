@@ -1,8 +1,9 @@
-﻿@model YourNamespace.Models.SongViewModel
+﻿@model Sample2.Models.SongViewModel
 
 <h2>Select Random Songs</h2>
 
 <form asp-action="Index" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group">
         <label for="NumberOfSongs">How many random songs would you like?</label>
         <input asp-for="NumberOfSongs" class="form-control" />
@@ -12,7 +13,7 @@
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
-@if (Model.SelectedSongs != null && Model.SelectedSongs.Count > 0)
+@if (Model.SelectedSongs != null && Model.SelectedSongs.Any())
 {
     <h3>Randomly Selected Songs:</h3>
     <ul>

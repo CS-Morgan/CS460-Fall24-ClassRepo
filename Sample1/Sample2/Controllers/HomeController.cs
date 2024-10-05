@@ -30,40 +30,32 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult Index(SongViewModel model)
     {
-        // Validate the form input
-        if (ModelState.IsValid)
+        // Check if the model state is valid
+        if (!ModelState.IsValid)
         {
-            // Build the path to the Songs.txt file in the App_Data folder
-            var songFilePath = Path.Combine(_env.ContentRootPath, "App_Data", "Songs.txt");
-
-            if (System.IO.File.Exists(songFilePath))
-            {
-                // Read all song names from the text file
-                var allSongs = System.IO.File.ReadAllLines(songFilePath).ToList();
-
-                // Validate if there are enough songs in the file
-                if (model.NumberOfSongs > allSongs.Count)
-                {
-                    ModelState.AddModelError("", "Not enough songs available in the file.");
-                    return View(model);
-                }
-
-                // Pick random songs
-                var random = new Random();
-                model.SelectedSongs = allSongs.OrderBy(x => random.Next()).Take(model.NumberOfSongs).ToList();
-
-                // Return the view with the list of random songs
-                return View(model);
-            }
-            else
-            {
-                ModelState.AddModelError("", "The songs file could not be found.");
-            }
+            // If there are validation errors, return the view to show errors
+            return View(model);
         }
 
-        // If there are validation errors or the file is missing, return the same view
+        // Logic for selecting random songs after validation succeeds
+        var songFilePath = Path.Combine(_env.ContentRootPath, "App_Data", "TSwift.txt");
+        var allSongs = System.IO.File.ReadAllLines(songFilePath).ToList();
+
+        // Check if enough songs exist in the file
+        if (model.NumberOfSongs > allSongs.Count)
+        {
+            ModelState.AddModelError("", "Not enough songs available in the file.");
+            return View(model);  // Return the view with error if not enough songs
+        }
+
+        // Shuffle and select the requested number of songs
+        var random = new Random();
+        model.SelectedSongs = allSongs.OrderBy(x => random.Next()).Take(model.NumberOfSongs).ToList();
+
+        // Pass the updated model (with the selected songs) back to the view
         return View(model);
     }
+
 
     // Privacy page
     public IActionResult Privacy()
