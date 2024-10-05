@@ -1,0 +1,24 @@
+﻿@model YourNamespace.Models.SongViewModel
+
+<h2>Select Random Songs</h2>
+
+<form asp-action="Index" method="post">
+    <div class="form-group">
+        <label for="NumberOfSongs">How many random songs would you like?</label>
+        <input asp-for="NumberOfSongs" class="form-control" />
+        <span asp-validation-for="NumberOfSongs" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+@if (Model.SelectedSongs != null && Model.SelectedSongs.Count > 0)
+{
+    <h3>Randomly Selected Songs:</h3>
+    <ul>
+        @foreach (var song in Model.SelectedSongs)
+        {
+            <li>@song</li>
+        }
+    </ul>
+}
