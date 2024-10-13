@@ -1,21 +1,25 @@
 ﻿@model Sample2.Models.SongViewModel
 
-<form asp-action="Teams" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="container mt-4">
+    <h2>Enter User Names and Number of Teams</h2>
 
-    <!-- Multiline input for entering user names (one name per line) -->
-    <div class="form-group">
-        <label for="UserNames">Enter User Names (letters, spaces, (, . - _ '):</label>
-        <textarea name="UserNames" class="form-control" rows="5"></textarea>
-        <span asp-validation-for="UserNames" class="text-danger"></span>
-    </div>
+    <form id="userInputForm" method="post" action="/Home/Index">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <!-- Input for specifying number of teams -->
-    <div class="form-group">
-        <label for="NumberOfTeams">Number of Teams (2-10):</label>
-        <input asp-for="NumberOfTeams" class="form-control" />
-        <span asp-validation-for="NumberOfTeams" class="text-danger"></span>
-    </div>
+        <!-- Multiline input for entering user names (one name per line) -->
+        <div class="form-group">
+            <label for="UserNames">Enter User Names (letters, spaces, ., - _ '):</label>
+            <textarea name="UserNames" class="form-control" rows="5" required></textarea>
+            <span asp-validation-for="UserNames" class="text-danger"></span>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+        <!-- Input for specifying number of teams -->
+        <div class="form-group">
+            <label for="NumberOfTeams">Number of Teams (2-10):</label>
+            <input asp-for="NumberOfTeams" class="form-control" min="2" max="10" required />
+            <span asp-validation-for="NumberOfTeams" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

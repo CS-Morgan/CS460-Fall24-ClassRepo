@@ -7,6 +7,7 @@ using System;
 using Sample2.Models;  // Import your models including ErrorViewModel and SongViewModel
 using Microsoft.Extensions.Hosting;  // For IWebHostEnvironment
 using System.Text.RegularExpressions;
+using Newtonsoft.Json; // Import for JSON serialization
 
 public class HomeController : Controller
 {
@@ -20,32 +21,34 @@ public class HomeController : Controller
         _env = env;
     }
 
-    // GET: Index method to display the input form
+    // Index method with Get and Post handlers for the form submission
     [HttpGet]
     public IActionResult Index()
     {
-        return View(new SongViewModel());  // Return a new instance of the model
+        // Show the initial form for input
+        return View(new SongViewModel());
     }
 
-    // POST: Teams method to handle form submission
     [HttpPost]
-    public IActionResult Teams(SongViewModel model, string userNames)
+    public IActionResult Index(SongViewModel model, string userNames)
     {
         // Split the multiline input into individual names
         var splitNames = userNames.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+        // Validate each user name using regex (allow letters, spaces, etc.)
+        string userNamePattern = @"^[a-zA-Z\s\.\-_']+$"; // Updated regex pattern
+
         model.UserNames = new List<string>();
 
-        // Validate user names using regex
-        string userNamePattern = @"^[a-zA-Z\s\.\-_']+$";
         foreach (var name in splitNames)
         {
             if (!Regex.IsMatch(name, userNamePattern))
             {
-                ModelState.AddModelError("UserNames", "Only letters, spaces, and , . - _ ' are allowed.");
+                ModelState.AddModelError("UserNames", "Only letters, spaces, and ( . - _ ') are allowed.");
             }
             else
             {
-                model.UserNames.Add(name.Trim());
+                model.UserNames.Add(name.Trim());  // Add valid name to the list
             }
         }
 
@@ -55,44 +58,83 @@ public class HomeController : Controller
             ModelState.AddModelError("NumberOfTeams", "Please enter a valid number of teams between 2 and 10.");
         }
 
-        // Check if the model state is valid
         if (!ModelState.IsValid)
         {
-            return View("Index", model);  // Return to the Index view with the invalid model
+            return View(model);  // Return the view with errors if validation fails
         }
 
-        // Logic for assigning teams
-        var songFilePath = Path.Combine(_env.ContentRootPath, "App_Data", "TSwift.txt");
-        var allSongs = System.IO.File.ReadAllLines(songFilePath).ToList();
+        // Store the user names and number of teams in TempData for use in the Teams action
+        TempData["UserNames"] = string.Join(",", model.UserNames);
+        TempData["NumberOfTeams"] = model.NumberOfTeams;
 
-        // Check if there are enough songs for the number of teams requested
-        if (model.NumberOfTeams > allSongs.Count)
-        {
-            ModelState.AddModelError("", "Not enough songs available for team names.");
-            return View("Index", model);  // Return to the Index view if not enough songs
-        }
+        // Redirect to the Teams page without query parameters
+        return RedirectToAction("Teams");
+    }
 
-        // Shuffle the user names and assign them to teams
-        var random = new Random();
-        var shuffledUsers = model.UserNames.OrderBy(x => random.Next()).ToList();
-        var teamSize = (int)Math.Ceiling((double)shuffledUsers.Count / model.NumberOfTeams);
+    [HttpGet]
+    public IActionResult Teams(SongViewModel model)
+    {
+        // Retrieve user names and number of teams from TempData
+        var userNames = TempData["UserNames"]?.ToString().Split(',').ToList() ?? new List<string>();
+        var numberOfTeams = (int)(TempData["NumberOfTeams"] ?? 2); // Default to 2 if not set
 
-        // Shuffle and select random team names from the songs list
-        var teamNames = allSongs.OrderBy(x => random.Next()).Take(model.NumberOfTeams).ToList();
-
-        // Distribute the shuffled users into random teams
+        // Set default team names from a predefined list
         model.Teams = new Dictionary<string, List<string>>();
-        for (int i = 0; i < model.NumberOfTeams; i++)
+
+        var defaultTeamNames = new[] { "Team A", "Team B", "Team C", "Team D", "Team E", "Team F", "Team G", "Team H", "Team I", "Team J" };
+        
+        foreach (var teamName in defaultTeamNames.Take(numberOfTeams))
         {
-            var teamMembers = shuffledUsers.Skip(i * teamSize).Take(teamSize).ToList();
-            if (teamMembers.Any())
+            model.Teams[teamName] = new List<string>(); // Initialize with empty teams
+        }
+
+        // Shuffle the user names to randomize their order
+        Shuffle(userNames);
+
+        // Distribute the user names to the teams
+        if (userNames.Count > 0)
+        {
+            var teamIndex = 0;
+            for (int i = 0; i < userNames.Count; i++)
             {
-                model.Teams.Add(teamNames[i], teamMembers);
+                var teamName = defaultTeamNames[teamIndex];
+                model.Teams[teamName].Add(userNames[i]);
+                teamIndex = (teamIndex + 1) % numberOfTeams; // Move to the next team
             }
         }
 
-        // Return the Teams view with the model containing the generated teams
-        return View("Teams", model);  
+        return View(model);
+    }
+
+    // Shuffle method to randomize a list
+    private void Shuffle<T>(IList<T> list)
+    {
+        var random = new Random();
+        int n = list.Count;
+
+        while (n > 1)
+        {
+            int k = random.Next(n--);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
+    }
+
+
+
+
+    // API method to get random team names
+    [HttpGet("Home/GetRandomTeamNames")]
+    public JsonResult GetRandomTeamNames()
+    {
+        var songFilePath = Path.Combine(_env.ContentRootPath, "App_Data", "TSwift.txt");
+        var allSongs = System.IO.File.ReadAllLines(songFilePath).ToList();
+
+        var random = new Random();
+        var teamNames = allSongs.OrderBy(x => random.Next()).Take(10).ToList(); // Adjust number as needed
+
+        return Json(teamNames);
     }
 
     // Privacy page
