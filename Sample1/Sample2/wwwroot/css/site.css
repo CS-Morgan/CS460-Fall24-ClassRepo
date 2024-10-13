@@ -18,5 +18,18 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa; /* Light gray background */
+}
+
+.custom-header {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.team-list {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 15px;
 }

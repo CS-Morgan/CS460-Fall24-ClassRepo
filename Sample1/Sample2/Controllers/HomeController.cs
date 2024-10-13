@@ -6,6 +6,8 @@ using System.Linq;
 using System;
 using Sample2.Models;  // Import your models including ErrorViewModel and SongViewModel
 using Microsoft.Extensions.Hosting;  // For IWebHostEnvironment
+using System.Text.RegularExpressions;
+
 
 public class HomeController : Controller
 {
@@ -28,34 +30,70 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public IActionResult Index(SongViewModel model)
+    public IActionResult Index(SongViewModel model, string userNames)
     {
-        // Check if the model state is valid
-        if (!ModelState.IsValid)
+        // Split the multiline input into individual names (splitting by new lines)
+        var splitNames = userNames.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+        // Validate each user name using regex (allow letters, spaces, (, . - _ '))
+        string userNamePattern = @"^[a-zA-Z\s\(\)\.\-_']+$";
+
+        model.UserNames = new List<string>(); //Try this
+
+        foreach (var name in splitNames)
         {
-            // If there are validation errors, return the view to show errors
-            return View(model);
+            if (!Regex.IsMatch(name, userNamePattern))
+            {
+                ModelState.AddModelError("UserNames", "Only letters, spaces, and (, . - _ ') are allowed.");
+            }
+            else
+            {
+                model.UserNames.Add(name.Trim());  // Add valid name to the list, trimming whitespace
+            }
         }
 
-        // Logic for selecting random songs after validation succeeds
+        // Validate the number of teams
+        if (model.NumberOfTeams < 2 || model.NumberOfTeams > 10)
+        {
+            ModelState.AddModelError("NumberOfTeams", "Please enter a valid number of teams between 2 and 10.");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return View(model);  // Return the view with errors if validation fails
+        }
+
+        // Ensure there are enough songs to use as team names
         var songFilePath = Path.Combine(_env.ContentRootPath, "App_Data", "TSwift.txt");
         var allSongs = System.IO.File.ReadAllLines(songFilePath).ToList();
 
-        // Check if enough songs exist in the file
-        if (model.NumberOfSongs > allSongs.Count)
+        if (model.NumberOfTeams > allSongs.Count)
         {
-            ModelState.AddModelError("", "Not enough songs available in the file.");
-            return View(model);  // Return the view with error if not enough songs
+            ModelState.AddModelError("", "Not enough songs available for team names.");
+            return View(model);
         }
 
-        // Shuffle and select the requested number of songs
+        // Shuffle the user names and assign them to teams
         var random = new Random();
-        model.SelectedSongs = allSongs.OrderBy(x => random.Next()).Take(model.NumberOfSongs).ToList();
+        var shuffledUsers = model.UserNames.OrderBy(x => random.Next()).ToList();
+        var teamSize = (int)Math.Ceiling((double)shuffledUsers.Count / model.NumberOfTeams);
 
-        // Pass the updated model (with the selected songs) back to the view
-        return View(model);
+        // Shuffle and select random team names from the songs list
+        var teamNames = allSongs.OrderBy(x => random.Next()).Take(model.NumberOfTeams).ToList();
+
+        // Distribute the shuffled users into random teams
+        model.Teams = new Dictionary<string, List<string>>();
+        for (int i = 0; i < model.NumberOfTeams; i++)
+        {
+            var teamMembers = shuffledUsers.Skip(i * teamSize).Take(teamSize).ToList();
+            if (teamMembers.Any())
+            {
+                model.Teams.Add(teamNames[i], teamMembers);
+            }
+        }
+
+        return View(model);  // Return the view with the updated teams
     }
-
 
     // Privacy page
     public IActionResult Privacy()

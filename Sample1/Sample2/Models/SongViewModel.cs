@@ -2,18 +2,26 @@ using System.ComponentModel.DataAnnotations;
 namespace Sample2.Models;
 
 //View model to take in integers from the user.
-//Numbers 1-10 are accepted,
+//Numbers 2-10 are accepted
+//Names with the correct format are also accepted
+//Through regular expression validation
 public class SongViewModel
 {
     [Required]
-    [Range(1, 10, ErrorMessage = "Please enter a value between 1 and 10.")]
-    public int NumberOfSongs { get; set; }
+    [Range(2, 10, ErrorMessage = "Please enter two to ten teams you would like to see:")]
+    public int NumberOfTeams { get; set; }
 
-    public List<string> SelectedSongs { get; set; } = new List<string>();  // Initialize to an empty list
+    [Required(ErrorMessage = "Please enter at least one name.")]
+    public List<string> UserNames { get; set; } = new List<string>();
+
+    public List<string> SelectedSongs { get; set; } = new List<string>();
+
+    public Dictionary<string, List<string>> Teams { get; set; } = new Dictionary<string, List<string>>();
 
     public SongViewModel()
     {
-        // Ensure SelectedSongs is initialized to an empty list
+        UserNames = new List<string>();
         SelectedSongs = new List<string>();
+        Teams = new Dictionary<string, List<string>>();
     }
 }

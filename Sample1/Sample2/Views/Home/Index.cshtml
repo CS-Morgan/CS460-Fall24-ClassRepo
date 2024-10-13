@@ -1,25 +1,37 @@
 ﻿@model Sample2.Models.SongViewModel
 
-<h2>Select Random Songs</h2>
-
 <form asp-action="Index" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <!-- Multiline input for entering user names (one name per line) -->
     <div class="form-group">
-        <label for="NumberOfSongs">How many random songs would you like?</label>
-        <input asp-for="NumberOfSongs" class="form-control" />
-        <span asp-validation-for="NumberOfSongs" class="text-danger"></span>
+        <label for="UserNames">Enter User Names (letters, spaces, (, . - _ '):</label>
+        <textarea name="UserNames" class="form-control" rows="5"></textarea>
+        <span asp-validation-for="UserNames" class="text-danger"></span>
+    </div>
+
+    <!-- Input for specifying number of teams -->
+    <div class="form-group">
+        <label for="NumberOfTeams">Number of Teams (2-10):</label>
+        <input asp-for="NumberOfTeams" class="form-control" />
+        <span asp-validation-for="NumberOfTeams" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
-@if (Model.SelectedSongs != null && Model.SelectedSongs.Any())
+<!-- Display the teams and their assigned user names -->
+@if (Model.Teams != null && Model.Teams.Any())
 {
-    <h3>Randomly Selected Songs:</h3>
-    <ul>
-        @foreach (var song in Model.SelectedSongs)
-        {
-            <li>@song</li>
-        }
-    </ul>
+    <h3>Randomly Generated Teams:</h3>
+    @foreach (var team in Model.Teams)
+    {
+        <h4>@team.Key (Team Name)</h4>
+        <ul>
+            @foreach (var user in team.Value)
+            {
+                <li>@user</li>
+            }
+        </ul>
+    }
 }
