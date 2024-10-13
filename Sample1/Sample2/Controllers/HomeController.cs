@@ -8,7 +8,6 @@ using Sample2.Models;  // Import your models including ErrorViewModel and SongVi
 using Microsoft.Extensions.Hosting;  // For IWebHostEnvironment
 using System.Text.RegularExpressions;
 
-
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
@@ -21,34 +20,32 @@ public class HomeController : Controller
         _env = env;
     }
 
-    // Index method with Get and Post handlers for the form submission
+    // GET: Index method to display the input form
     [HttpGet]
     public IActionResult Index()
     {
-        // Show the initial form for input
-        return View(new SongViewModel());
+        return View(new SongViewModel());  // Return a new instance of the model
     }
 
+    // POST: Teams method to handle form submission
     [HttpPost]
-    public IActionResult Index(SongViewModel model, string userNames)
+    public IActionResult Teams(SongViewModel model, string userNames)
     {
-        // Split the multiline input into individual names (splitting by new lines)
+        // Split the multiline input into individual names
         var splitNames = userNames.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+        model.UserNames = new List<string>();
 
-        // Validate each user name using regex (allow letters, spaces, (, . - _ '))
-        string userNamePattern = @"^[a-zA-Z\s\(\)\.\-_']+$";
-
-        model.UserNames = new List<string>(); //Try this
-
+        // Validate user names using regex
+        string userNamePattern = @"^[a-zA-Z\s\.\-_']+$";
         foreach (var name in splitNames)
         {
             if (!Regex.IsMatch(name, userNamePattern))
             {
-                ModelState.AddModelError("UserNames", "Only letters, spaces, and (, . - _ ') are allowed.");
+                ModelState.AddModelError("UserNames", "Only letters, spaces, and , . - _ ' are allowed.");
             }
             else
             {
-                model.UserNames.Add(name.Trim());  // Add valid name to the list, trimming whitespace
+                model.UserNames.Add(name.Trim());
             }
         }
 
@@ -58,19 +55,21 @@ public class HomeController : Controller
             ModelState.AddModelError("NumberOfTeams", "Please enter a valid number of teams between 2 and 10.");
         }
 
+        // Check if the model state is valid
         if (!ModelState.IsValid)
         {
-            return View(model);  // Return the view with errors if validation fails
+            return View("Index", model);  // Return to the Index view with the invalid model
         }
 
-        // Ensure there are enough songs to use as team names
+        // Logic for assigning teams
         var songFilePath = Path.Combine(_env.ContentRootPath, "App_Data", "TSwift.txt");
         var allSongs = System.IO.File.ReadAllLines(songFilePath).ToList();
 
+        // Check if there are enough songs for the number of teams requested
         if (model.NumberOfTeams > allSongs.Count)
         {
             ModelState.AddModelError("", "Not enough songs available for team names.");
-            return View(model);
+            return View("Index", model);  // Return to the Index view if not enough songs
         }
 
         // Shuffle the user names and assign them to teams
@@ -92,7 +91,8 @@ public class HomeController : Controller
             }
         }
 
-        return View(model);  // Return the view with the updated teams
+        // Return the Teams view with the model containing the generated teams
+        return View("Teams", model);  
     }
 
     // Privacy page

@@ -1,6 +1,6 @@
 ﻿@model Sample2.Models.SongViewModel
 
-<form asp-action="Index" method="post">
+<form asp-action="Teams" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <!-- Multiline input for entering user names (one name per line) -->
@@ -19,19 +19,3 @@
 
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-
-<!-- Display the teams and their assigned user names -->
-@if (Model.Teams != null && Model.Teams.Any())
-{
-    <h3>Randomly Generated Teams:</h3>
-    @foreach (var team in Model.Teams)
-    {
-        <h4>@team.Key (Team Name)</h4>
-        <ul>
-            @foreach (var user in team.Value)
-            {
-                <li>@user</li>
-            }
-        </ul>
-    }
-}

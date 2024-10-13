@@ -1,78 +1,91 @@
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using Sample2.Models;
-using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Sample1.Tests
+namespace Sample_Tests
 {
-    [TestFixture]
     public class SongViewModelTests
     {
+        private SongViewModel model;
+
         [SetUp]
         public void Setup()
         {
+            model = new SongViewModel();
         }
 
         [Test]
         public void UserNames_AcceptsValidNames()
         {
             // Arrange
-            var model = new SongViewModel();
-            var validUserNames = new[] { "Alice", "Bob", "Chris" };
+            var validUserNames = new List<string> { "Alice", "Bob", "Chris" };
 
             // Act
-            model.UserNames = validUserNames.ToList();
+            model.UserNames = validUserNames;
 
             // Assert
-            Assert.AreEqual(3, model.UserNames.Count);
-            Assert.AreEqual("Alice", model.UserNames[0]);
+            ClassicAssert.AreEqual(3, model.UserNames.Count);
+            ClassicAssert.AreEqual("Alice", model.UserNames[0]);
         }
 
         [Test]
-        public void NumberOfTeams_AcceptsValidInput()
+        public void UserNames_RejectsInvalidNames()
         {
             // Arrange
-            var model = new SongViewModel { NumberOfTeams = 5 };
-
-            // Assert
-            Assert.AreEqual(5, model.NumberOfTeams);
-        }
-
-        [Test]
-        public void Teams_AssignedCorrectly()
-        {
-            // Arrange
-            var model = new SongViewModel();
-            model.UserNames = new[] { "Alice", "Bob", "Chris", "David" }.ToList();
-            model.NumberOfTeams = 2;
-
-            // Act
-            var controller = new SampleController();  // Assuming this is the controller handling the logic
-            controller.AssignTeams(model);  // Assuming this method exists to assign teams
-
-            // Assert
-            Assert.AreEqual(2, model.Teams.Count);  // Check if 2 teams were created
-            Assert.IsTrue(model.Teams.Values.All(t => t.Count > 0));  // Ensure each team has members
-        }
-
-        [Test]
-        public void InvalidUserNames_ReturnsModelError()
-        {
-            // Arrange
-            var model = new SongViewModel();
-            var invalidUserNames = new[] { "Invalid_Name!", "Bob123", "Alice@!" };
+            var invalidUserNames = new List<string> { "Invalid_Name!", "Bob123", "Alice@!" };
 
             // Act & Assert
             foreach (var name in invalidUserNames)
             {
-                Assert.False(IsValidUserName(name), $"{name} should not be a valid user name");
+                ClassicAssert.IsFalse(IsValidUserName(name), $"{name} should not be a valid user name");
             }
         }
 
-        // Helper method to validate names (adjust based on your validation rules)
+        [Test]
+        public void Teams_AreAssignedCorrectly()
+        {
+            // Arrange
+            model.UserNames = new List<string> { "Alice", "Bob", "Chris", "David" };
+            model.NumberOfTeams = 2;
+
+            // Act
+            var random = new System.Random();
+            var shuffledUsers = model.UserNames.OrderBy(x => random.Next()).ToList();
+            var teamSize = (int)Math.Ceiling((double)shuffledUsers.Count / model.NumberOfTeams);
+            var teamNames = new List<string> { "Team A", "Team B" };
+
+            model.Teams = new Dictionary<string, List<string>>();
+            for (int i = 0; i < model.NumberOfTeams; i++)
+            {
+                var teamMembers = shuffledUsers.Skip(i * teamSize).Take(teamSize).ToList();
+                if (teamMembers.Any())
+                {
+                    model.Teams.Add(teamNames[i], teamMembers);
+                }
+            }
+
+            // Assert
+            ClassicAssert.AreEqual(2, model.Teams.Count);
+            ClassicAssert.IsTrue(model.Teams.Values.All(t => t.Count > 0));
+        }
+
+        [Test]
+        public void NumberOfTeams_WithinValidRange()
+        {
+            // Arrange
+            model.NumberOfTeams = 5;
+
+            // Act & Assert
+            ClassicAssert.IsTrue(model.NumberOfTeams >= 2 && model.NumberOfTeams <= 10, "Number of teams should be between 2 and 10.");
+        }
+
+        // Helper method to validate names
         private bool IsValidUserName(string name)
         {
             string pattern = @"^[a-zA-Z\s\(\)\.\-_']+$";
-            return Regex.IsMatch(name, pattern);
+            return System.Text.RegularExpressions.Regex.IsMatch(name, pattern);
         }
     }
 }

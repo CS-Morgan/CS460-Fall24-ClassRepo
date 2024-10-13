@@ -1,0 +1,37 @@
+@model Sample2.Models.SongViewModel
+
+<div class="container mt-4">
+    <h2>Team Assignment Results</h2>
+
+    @if (Model.Teams != null && Model.Teams.Any())
+    {
+        <h3>Randomly Generated Teams:</h3>
+
+        <!-- Loop through each team -->
+        @foreach (var team in Model.Teams)
+        {
+            <div class="card mt-3">
+                <div class="card-header bg-primary text-white">
+                    <h4>@team.Key (Team Name)</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <!-- Loop through each member in the team -->
+                        @foreach (var user in team.Value)
+                        {
+                            <li class="list-group-item">@user</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No teams were generated. Please try again.</p>
+    }
+</div>
+
+<div class="mt-4">
+    <a href="/" class="btn btn-secondary">Back to Input Page</a>
+</div>
