@@ -1,23 +1,28 @@
+<!-- Code was made with the help of ChatGPT and Co-Pilot-->
+
 @model Sample2.Models.SongViewModel
 
 <div class="container mt-4">
-    <h2>Team Assignment</h2>
+    <h2>Team Assignment Results</h2>
 
     @if (Model.Teams != null && Model.Teams.Any())
     {
-        <h3>Teams:</h3>
+        <h3>Randomly Generated Teams:</h3>
 
+        <!-- Loop through each team -->
         @foreach (var team in Model.Teams)
         {
-            <div class="card mt-3">
+            <div class="card mt-6">
                 <div class="card-header bg-primary text-white">
-                    <h4>@team.Key</h4> <!-- Display the team name -->
+                    <h4>@team.Key </h4>
                 </div>
                 <div class="card-body">
-                    <ul class="list-group">
+                    <h5 class="card-title"></h5>
+                    <ul class="list-group list-group-flush">
+                        <!-- Loop through each member in the team -->
                         @foreach (var user in team.Value)
                         {
-                            <li class="list-group-item">@user</li> <!-- Display the user name -->
+                            <li class="list-group-item">@user</li>
                         }
                     </ul>
                 </div>
@@ -28,15 +33,21 @@
     {
         <p>No teams were generated. Please try again.</p>
     }
+</div>
 
-    <div class="mt-4">
-        <button id="generateButton" class="btn btn-primary">Generate Random Team Names</button>
-    </div>
+<!-- Button for both Team Generation and Home Page on Bottom-->
+<div class="mt-4">
+    <button id="generateButton" class="btn btn-primary">Generate Random Team Names</button>
+</div>
+
+
+<div class="mt-4">
+    <a href="/" class="btn btn-secondary">Back to Home Page</a>
 </div>
 
 <div class="mt-4">
-    <a href="/" class="btn btn-secondary">Back to Input Page</a>
 </div>
+
 
 @section Scripts {
     <script>

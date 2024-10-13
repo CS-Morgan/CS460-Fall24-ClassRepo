@@ -5,6 +5,11 @@ namespace Sample2.Models;
 //Numbers 2-10 are accepted
 //Names with the correct format are also accepted
 //Through regular expression validation
+//All of them are put into a list
+//And then a dictionary for key access
+
+/*<!-- Code was made with the help of ChatGPT and Co-Pilot-->*/
+
 public class SongViewModel
 {
     [Required]

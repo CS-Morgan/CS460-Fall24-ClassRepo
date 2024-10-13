@@ -1,3 +1,6 @@
+/*Controller code used to link both the View and Model together to delivery exceptional user experience*/
+/*This code was made in contribution to ChatGPT and Co-Pilot*/
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -120,9 +123,6 @@ public class HomeController : Controller
             list[n] = value;
         }
     }
-
-
-
 
     // API method to get random team names
     [HttpGet("Home/GetRandomTeamNames")]

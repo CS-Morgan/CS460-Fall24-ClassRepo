@@ -1,3 +1,6 @@
+//Unit Testing to test every clause in the Project
+//Made in contribution thanks to ChatGPT, Co-Pilot, and Stack Overflow
+
 using NUnit.Framework;
 using NUnit.Framework.Legacy;
 using Sample2.Models;
@@ -16,6 +19,7 @@ namespace Sample_Tests
             model = new SongViewModel();
         }
 
+        //Test to accept valid usernames
         [Test]
         public void UserNames_AcceptsValidNames()
         {
@@ -30,11 +34,12 @@ namespace Sample_Tests
             ClassicAssert.AreEqual("Alice", model.UserNames[0]);
         }
 
+        //Test to make sure usernames are not accepted if invalid
         [Test]
-        public void UserNames_RejectsInvalidNames()
+        public void UserNames_InvalidNames()
         {
             // Arrange
-            var invalidUserNames = new List<string> { "Invalid_Name!", "Bob123", "Alice@!" };
+            var invalidUserNames = new List<string> {"Invalid_Name!", "Bob123", "Alice@!" };
 
             // Act & Assert
             foreach (var name in invalidUserNames)
@@ -43,8 +48,9 @@ namespace Sample_Tests
             }
         }
 
+        //Test to make sure teams are randomly assigned everytime the app is used
         [Test]
-        public void Teams_AreAssignedCorrectly()
+        public void Teams_AreAssignedRandomly()
         {
             // Arrange
             model.UserNames = new List<string> { "Alice", "Bob", "Chris", "David" };
@@ -69,8 +75,10 @@ namespace Sample_Tests
             // Assert
             ClassicAssert.AreEqual(2, model.Teams.Count);
             ClassicAssert.IsTrue(model.Teams.Values.All(t => t.Count > 0));
+            ClassicAssert.IsTrue(model.Teams.Values.SelectMany(t => t).Distinct().Count() == model.UserNames.Count, "All usernames should be assigned to a team.");
         }
 
+        //Test to validate number range
         [Test]
         public void NumberOfTeams_WithinValidRange()
         {
