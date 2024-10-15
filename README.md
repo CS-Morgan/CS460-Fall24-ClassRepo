@@ -61,7 +61,8 @@ Sample connection strings.  NOTE: The `\\` is for when this connection string is
 Data Source=localhost;Initial Catalog=AuctionHouse;User Id=sa;Password='Hello123#';
 
 # LocalDB
-Data Source=(localdb)\\MSSQLLocalDB;
+Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=AuctionHouse;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
+
 ```
 
 ### Create Model classes and the DBContext subclass
