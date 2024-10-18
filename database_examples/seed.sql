@@ -9,11 +9,11 @@ INSERT INTO [Buyer](FirstName,LastName,Email)
 	('Tom','McMasters','tom@yahoo.com'),
 	('Otto','Vanderwall','otto@otto.com');
 
-INSERT INTO [Seller](FirstName,LastName,Email,Phone,TaxIDNumber)
+INSERT INTO [Seller](FirstName,LastName,Email,Phone,TaxID)
 	VALUES
-	('Gayle','Hardy','gayle@hotmail.com','234-523-9923','123455'),
-	('Lyle','Banks','lyle@hotmail.com','622-494-4782','2352334'),
-	('Pearl','Greene','pearl@gmail.com','755-823-7245','02394833');
+	('Gayle','Hardy','gayle@hotmail.com','234-523-9923','7'),
+	('Lyle','Banks','lyle@hotmail.com','622-494-4782','22'),
+	('Pearl','Greene','pearl@gmail.com','755-823-7245','9999');
 
 INSERT INTO [Item](Name,Description,SellerID)
 	VALUES

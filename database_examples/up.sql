@@ -20,7 +20,7 @@ CREATE TABLE [Seller]
   [LastName]  NVARCHAR(50) NOT NULL,
   [Email]     NVARCHAR(50) NOT NULL,
   [Phone]     NVARCHAR(15),
-  [TaxIDNumber] NVARCHAR(12) NOT NULL
+  [TaxID]     CHAR(12) NOT NULL
 );
 
 CREATE TABLE [Item] 
