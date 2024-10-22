@@ -1,0 +1,20 @@
+@model IEnumerable<Buyer> 
+    @{
+    ViewData["Title"] = "Home Page";
+    }
+
+    <h2>Buyers</h2>
+
+<table class="table">
+    <thead>
+        <tr><td>First Name</td><td>Last Name</td><td>Email</td></tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.FirstName</td>
+            <td>@item.LastName</td>
+            <td>@item.Email</td>
+        </tr>
+    }
+</table>

@@ -1,21 +1,33 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using AuctionHouse2.Models;
+using AuctionHouse2.DAL.Abstract;
 
 namespace AuctionHouse2.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly IRepository<Buyer> _buyerRepository;
 
-    public HomeController(ILogger<HomeController> logger)
+    AuctionHouseDbContext _context;
+    public HomeController(ILogger<HomeController> logger, AuctionHouseDbContext context, IRepository<Buyer> buyerRepo)
     {
         _logger = logger;
+        _context = context;
+        _buyerRepository = buyerRepo;
     }
 
     public IActionResult Index()
     {
-        return View();
+        List<Item> items = _context.Items.ToList();
+        return View(items);
+    }
+
+    public IActionResult Buyer()
+    {
+        List<Buyer> buyers = _buyerRepository.GetAll().ToList();
+        return View(buyers);
     }
 
     public IActionResult Privacy()
