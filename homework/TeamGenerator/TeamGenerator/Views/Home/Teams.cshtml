@@ -1,0 +1,17 @@
+@model TeamGenerator.Models.Teams;
+
+@{
+    ViewData["Title"] = "Teams";
+}
+
+<h1>Teams</h1>
+
+@foreach(var team in Model.TeamAssignments)
+{
+    <ul>
+        @foreach(var member in team)
+        {
+            <li>@member</li>
+        }
+    </ul>
+}

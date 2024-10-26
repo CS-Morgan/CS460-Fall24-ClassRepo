@@ -1,0 +1,30 @@
+﻿@model TeamGenerator.ViewModels.TeamGeneratorVM;
+
+@{
+    ViewData["Title"] = "HW 1 -- Team Generator";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Team Generator</h1>
+</div>
+
+<!--Build a form that posts to action of teams that contains a text area, a number input and a submit button -->
+<form action="teams" method="post">
+    <div class="form-group row mt-3">
+        <label for="Names" class="col-md-2 col-form-label h4">Enter names:</label>
+        <div class="col-md-8">
+            <textarea asp-for="Names" class="form-control" rows="10"></textarea>
+        </div>
+        <span asp-validation-for="Names" class="text-danger"></span>
+    </div>
+
+    <div class="form-group row mt-3">
+        <label for="TeamSize" class="col-md-2 col-form-label h4">Team Size:</label>
+        <div class="col-md-2">
+            <input asp-for="TeamSize" class="form-control" value="@Model.TeamSize" />
+        </div>
+        <span asp-validation-for="TeamSize" class="text-danger"></span>
+    </div>
+
+    <input type="submit" value="Make Teams!" class="btn btn-primary mt-3">
+</form>
