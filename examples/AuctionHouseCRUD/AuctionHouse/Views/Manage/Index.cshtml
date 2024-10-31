@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Manage Clients";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Management Portal</h1>
+    <p id="welcome"></p>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="text-center">
+            <h2 class="display-5 portal-header mb-4">Sellers</h2>
+            <table class="table" id="seller-table" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Phone Number</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @*JS will fill this in*@
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h1>&nbsp;</h1>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#add-seller-modal">
+            Add Seller
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="add-seller-modal" tabindex="-1" aria-labelledby="add-seller-modal-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="add-seller-modal-label">Add a new Seller</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="first-name" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="first-name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="last-name" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="last-name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="email" aria-describedby="email-help">
+                                <div id="email-help" class="form-text">We'll never share your email with anyone else.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone number</label>
+                                <input type="text" class="form-control" id="phone">
+                            </div>
+                            <div class="mb-3">
+                                <label for="taxid" class="form-label">Tax ID #</label>
+                                <input type="text" class="form-control" id="taxid" aria-describedby="taxid-help">
+                                <div id="taxid-help" class="form-text">Please enter your IRS Tax ID #</div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="add-seller-button">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*This adds the script element to this page but does it in the correct place as rendered by the shared layout*@
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/manage.js"></script>
+}

@@ -1,0 +1,28 @@
+﻿@model AuctionHouse.ViewModels.BuyersVM
+
+@{
+    ViewBag.Title = "Buyers";
+}
+
+<h2>Buyers</h2>
+
+<table class="table">
+    <thead>
+        <tr><td>First Name</td><td>Last Name</td><td>Email</td></tr>
+    </thead>
+    @foreach (var buyer in Model.Buyers)
+    {
+        <tr>
+            <td>@buyer.FirstName</td>
+            <td>@buyer.LastName</td>
+            <td>@buyer.Email</td>
+        </tr>
+    }
+</table>
+
+<ul>
+    @foreach(string email in Model.EmailList)
+    {
+        <li>@email</li>
+    }
+</ul>
