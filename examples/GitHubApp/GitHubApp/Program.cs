@@ -10,7 +10,7 @@ namespace GitHubApp
         {
             var builder = WebApplication.CreateBuilder(args);
             string gitHubAPIKey = builder.Configuration["CS460-F24"];
-            string gitHubAPIUrl = "https://api.github.com";
+            string gitHubAPIUrl = "https://api.github.com/";
 
             builder.Services.AddHttpClient<IGitHubService, GitHubService>((httpClient, services) =>
             {

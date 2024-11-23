@@ -3,8 +3,10 @@
 namespace GitHubApp.Services
 {
     public interface IGitHubService
+    {
 
-    { 
-        Task<IEnumerable<GitRepo>> SearchRepositoriesAsync (string query);
+        public Task<GitRepo> SearchRepositoriesAsync(string query);
+
+
     }
 }

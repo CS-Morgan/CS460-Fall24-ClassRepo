@@ -7,7 +7,12 @@
     <UserSecretsId>9a9c54da-71b9-4553-ab68-28014154ee33</UserSecretsId>
   </PropertyGroup>
 
-  <ItemGroup>
+	<ItemGroup>
+		<Compile Remove="snippets.cs" />
+	</ItemGroup>
+
+
+	<ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="7.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.0.0" />

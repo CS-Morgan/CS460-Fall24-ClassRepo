@@ -1,6 +1,5 @@
-﻿
+﻿namespace GitHubApp.Models
 
-namespace GitHubApp.Models
 {
     public class GitRepo
     {
