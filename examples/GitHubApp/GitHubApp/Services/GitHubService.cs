@@ -1,4 +1,4 @@
-﻿using GitHubApp.Models;
+using GitHubApp.Models;
 using System.Text.Json;
 
 
@@ -36,7 +36,7 @@ namespace GitHubApp.Services
     }
         //The method SearchRepositoriesAsync is designed to search for repositories on GitHub
         //based on a query string. Here's a step-by-step breakdown of what this method does:   
-        public async Task<GitRepo> SearchRepositoriesAsync(string query)
+        public async Task<IEnumerable<GitRepo>> SearchRepositoriesAsync(string query)
     {
         string endpoint =$"/search/repositories/${query}";
             _logger.LogInformation($"Calling GitHub API at {endpoint}");   
