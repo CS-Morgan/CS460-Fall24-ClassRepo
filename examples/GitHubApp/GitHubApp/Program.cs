@@ -1,5 +1,6 @@
-using GitHubApp.Services;
+﻿using GitHubApp.Services;
 using System.Net.Http.Headers;
+using GitHubApp.Controllers;
 
 namespace GitHubApp
 {
@@ -9,7 +10,7 @@ namespace GitHubApp
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            string gitHubAPIKey = builder.Configuration["CS460-F24"];
+            string gitHubAPIKey = builder.Configuration["CS460_F24"];
             string gitHubAPIUrl = "https://api.github.com/";
 
             builder.Services.AddHttpClient<IGitHubService, GitHubService>((httpClient, services) =>
@@ -24,6 +25,8 @@ namespace GitHubApp
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+                        builder.Services.AddEndpointsApiExplorer();
 
             //Add Swagger
             builder.Services.AddSwaggerGen();
@@ -54,6 +57,8 @@ namespace GitHubApp
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
 
             app.Run();
         }

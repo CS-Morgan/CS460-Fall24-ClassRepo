@@ -1,5 +1,7 @@
 using GitHubApp.Models;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.OpenApi;
 
 
 namespace GitHubApp.Services
@@ -25,35 +27,38 @@ namespace GitHubApp.Services
 
     }
     public class GitHubService : IGitHubService
-{
-    readonly HttpClient _httpClient;
-    readonly ILogger<GitHubService> _logger;
+    {
+        readonly HttpClient _httpClient;
+        readonly ILogger<GitHubService> _logger;
 
-    public GitHubService(HttpClient httpClient, ILogger<GitHubService> logger)
-    {
-        _httpClient = httpClient;
-        _logger = logger;
-    }
-        //The method SearchRepositoriesAsync is designed to search for repositories on GitHub
-        //based on a query string. Here's a step-by-step breakdown of what this method does:   
+        public GitHubService(HttpClient httpClient, ILogger<GitHubService> logger)
+        {
+            _httpClient = httpClient;
+            _logger = logger;
+        }
+   
         public async Task<IEnumerable<GitRepo>> SearchRepositoriesAsync(string query)
-    {
-        string endpoint =$"/search/repositories/${query}";
-            _logger.LogInformation($"Calling GitHub API at {endpoint}");   
+        {
+            // "https://api.github.com/search/repositories?q=Q"
+            string endpoint = $"search/repositories?q={query}&per_page=100";
+            _logger.LogInformation($"Calling GitHub API at {endpoint}");
+
             HttpResponseMessage response = await _httpClient.GetAsync(endpoint);
-        string responseBody;
-        if (response.IsSuccessStatusCode)
-        {
-            responseBody = await response.Content.ReadAsStringAsync();
-        }
-        else
-        {
-            throw new Exception($"Error: {response.StatusCode}");
-        }
-        JsonSerializerOptions options = new JsonSerializerOptions
-        { 
-            PropertyNameCaseInsensitive = true 
-        };
+            
+            string responseBody;
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Success");
+                responseBody = await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                throw new Exception($"Error: {response.StatusCode}");
+            }
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
             GitSearchRepoResponse repos = JsonSerializer.Deserialize<GitSearchRepoResponse>(responseBody, options);
             return repos.Items.Select(r => new GitRepo
             {
@@ -63,5 +68,7 @@ namespace GitHubApp.Services
             });
         }
 
+    }
 }
-}
+
+
