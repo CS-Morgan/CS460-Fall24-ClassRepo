@@ -1,0 +1,38 @@
+/*<!-- Code was made with the help of ChatGPT and Co-Pilot-->*/
+/*CSS Style for both bootstrap and formation/coloring of webpages and buttons*/
+
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa; /* Light gray background */
+}
+
+.custom-header {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.team-list {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 15px;
+}
